@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-const Participate = () => {
+const Friends = () => {
   return (
     <View>
-      <Text>Participate</Text>
+      <Text>Friends</Text>
     </View>
   );
 };
 
-export default Participate;
+export default Friends;

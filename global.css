@@ -5,7 +5,7 @@
 @import "nativewind/theme";
 
 @theme {
-  --color-background: #fff9e3;
+  --color-background: #fff;
   --color-foreground: #081126;
   --color-card: #fff8e7;
   --color-muted: #f6eecf;
@@ -68,44 +68,56 @@
   @apply size-6;
 }
 
-.home-header {
+.profile-header {
   @apply mb-2.5 flex-row items-center justify-between;
 }
 
-.home-user {
-  @apply flex-row items-center;
+.profile-user {
+  @apply flex-row items-center w-full;
 }
 
-.home-avatar {
+.profile-info {
+  @apply ml-4 flex-col w-full;
+}
+
+.profile-avatar {
   @apply size-16 rounded-full;
 }
 
-.home-user-name {
-  @apply ml-4 text-2xl font-sans-bold text-primary;
+.profile-user-name {
+  @apply text-2xl font-sans-bold text-primary;
 }
 
-.home-add-icon {
+.profile-add-icon {
   @apply size-12;
 }
 
-.home-balance-card {
-  @apply my-2.5 min-h-50 justify-between gap-5 rounded-bl-4xl rounded-tr-4xl bg-accent p-6;
+.profile-settings {
+  @apply size-6 absolute right-0 top-1;
 }
 
-.home-balance-label {
-  @apply text-xl font-sans-semibold text-white/80;
+.profile-stats {
+  @apply flex flex-row my-2.5 justify-center items-center gap-8 rounded-2xl bg-primary pt-2 pb-2;
 }
 
-.home-balance-row {
-  @apply flex-row items-center justify-between;
+.profile-sessions {
+  @apply flex flex-col items-center;
 }
 
-.home-balance-amount {
-  @apply text-4xl font-sans-extrabold text-white;
+.profile-miles {
+  @apply flex flex-col items-center;
 }
 
-.home-balance-date {
-  @apply text-xl font-sans-medium text-white;
+.profile-duration {
+  @apply flex flex-col items-center;
+}
+
+.profile-stats__text {
+  @apply color-white text-xs tracking-tighter;
+}
+
+.profile-stats__text-bold {
+  @apply color-white font-sans-bold text-xl;
 }
 
 .list-head {

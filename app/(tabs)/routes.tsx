@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-const Help = () => {
+const Routes = () => {
   return (
     <View>
-      <Text>Help</Text>
+      <Text>Routes</Text>
     </View>
   );
 };
 
-export default Help;
+export default Routes;
