@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-const Subscriptions = () => {
+const Help = () => {
   return (
     <View>
-      <Text>subscription</Text>
+      <Text>Help</Text>
     </View>
   );
 };
 
-export default Subscriptions;
+export default Help;
