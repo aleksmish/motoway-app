@@ -92,8 +92,12 @@
   @apply size-12;
 }
 
+.profile-settings__container {
+  @apply absolute right-0 top-1;
+}
+
 .profile-settings {
-  @apply size-6 absolute right-0 top-1;
+  @apply size-6;
 }
 
 .profile-stats {
@@ -118,6 +122,49 @@
 
 .profile-stats__text-bold {
   @apply color-white font-sans-bold text-xl;
+}
+
+.profile-garage {
+  @apply mt-4;
+}
+
+.profile-garage__title {
+  @apply font-sans-medium text-xl mb-2;
+}
+
+.profile-garage__vehicles {
+}
+
+.profile-garage__vehicles-scroll {
+  @apply pb-4;
+}
+
+.profile-garage__vehicle {
+  @apply min-h-80 min-w-80 flex flex-col justify-between shadow-xs rounded-3xl;
+}
+
+.profile-garage__vehicle-image {
+  @apply w-full h-full rounded-t-3xl;
+}
+
+.profile-garage__vehicle-summary {
+  @apply rounded-b-3xl p-4;
+}
+
+.profile-garage__vehicle-image-container {
+  @apply min-h-62 max-h-62 h-62 w-full;
+}
+
+.profile-garage__vehicle-brand-model {
+  @apply font-sans-bold;
+}
+
+.profile-garage__vehicle-empty {
+  @apply min-h-80 flex flex-col justify-center items-center shadow-md rounded-3xl;
+}
+
+.profile-garage__vehicle-empty-add {
+  @apply w-8 h-8;
 }
 
 .list-head {
