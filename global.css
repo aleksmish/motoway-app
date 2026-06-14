@@ -133,14 +133,19 @@
 }
 
 .profile-garage__vehicles {
+  @apply w-full;
 }
 
 .profile-garage__vehicles-scroll {
-  @apply pb-4;
+  @apply w-full pb-4;
+}
+
+.profile-garage__vehicle-empty-pressable {
+  @apply w-full;
 }
 
 .profile-garage__vehicle {
-  @apply min-h-80 min-w-80 flex flex-col justify-between shadow-xs rounded-3xl;
+  @apply min-h-80 min-w-80 flex flex-col justify-between shadow-xs rounded-3xl border border-black/10;
 }
 
 .profile-garage__vehicle-image {
@@ -160,7 +165,7 @@
 }
 
 .profile-garage__vehicle-empty {
-  @apply min-h-80 flex flex-col justify-center items-center shadow-md rounded-3xl;
+  @apply min-h-80 flex flex-col justify-center items-center shadow-md rounded-3xl w-full;
 }
 
 .profile-garage__vehicle-empty-add {

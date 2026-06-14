@@ -1,39 +1,41 @@
-import { addIcon, profileSettingsIcon } from "@/constants/data";
+import VehicleCard from "@/components/VehicleCard";
+import VehiclesEmpty from "@/components/VehiclesEmpty";
+import { profileSettingsIcon } from "@/constants/data";
 import images from "@/constants/images";
 import { Image } from "expo-image";
 import { styled } from "nativewind";
 import React from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { FlatList, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreView } from "react-native-safe-area-context";
 
 const VEHICLES = [
   {
-    id: 1,
+    id: "1",
     brand: "Kawasaki",
     model: "Ninja 650",
     modelYear: 2006,
     cc: 649,
-    mileage: 15000,
+    mileAge: 15000,
     image:
       "https://content2.kawasaki.com/ContentStorage/KMC/ProductTrimGroup/18/0d00b2e1-35c8-456d-93b6-c7e22cd914bb.jpg?w=1500",
   },
   {
-    id: 2,
+    id: "2",
     brand: "Kawasaki",
     model: "Ninja 650",
     modelYear: 2006,
     cc: 649,
-    mileage: 15000,
+    mileAge: 15000,
     image:
       "https://content2.kawasaki.com/ContentStorage/KMC/ProductTrimGroup/18/0d00b2e1-35c8-456d-93b6-c7e22cd914bb.jpg?w=1500",
   },
   {
-    id: 3,
+    id: "3",
     brand: "Kawasaki",
     model: "Ninja 650",
     modelYear: 2006,
     cc: 649,
-    mileage: 15000,
+    mileAge: 15000,
     image:
       "https://content2.kawasaki.com/ContentStorage/KMC/ProductTrimGroup/18/0d00b2e1-35c8-456d-93b6-c7e22cd914bb.jpg?w=1500",
   },
@@ -92,42 +94,19 @@ const Profile = () => {
         <View className="profile-garage">
           <Text className="profile-garage__title">My Garage</Text>
           <View className="profile-garage__vehicles">
-            <ScrollView
-              contentContainerStyle={{ gap: 26 }}
+            <FlatList
+              data={VEHICLES}
               showsHorizontalScrollIndicator={false}
               className="profile-garage__vehicles-scroll"
-              horizontal={true}
-            >
-              {VEHICLES.length > 0 ? (
-                VEHICLES.map((vehicle) => (
-                  <View className="profile-garage__vehicle" key={vehicle.id}>
-                    <View className="profile-garage__vehicle-image-container">
-                      <Image
-                        resizeMode="contain"
-                        className="profile-garage__vehicle-image"
-                        source={{ uri: vehicle.image }}
-                      />
-                    </View>
-                    <View className="profile-garage__vehicle-summary">
-                      <Text className="profile-garage__vehicle-brand-model">
-                        {vehicle.brand}, <Text>{vehicle.model}</Text>
-                      </Text>
-                      <Text>{vehicle.modelYear}</Text>
-                    </View>
-                  </View>
-                ))
-              ) : (
-                <Pressable style={({ pressed }) => pressed && { opacity: 0.6 }}>
-                  <View className="profile-garage__vehicle-empty">
-                    <Image
-                      className="profile-garage__vehicle-empty-add"
-                      source={addIcon}
-                    />
-                    <Text>Add vehicle</Text>
-                  </View>
-                </Pressable>
-              )}
-            </ScrollView>
+              horizontal
+              keyExtractor={(item) => String(item.id)}
+              renderItem={({ item }) => <VehicleCard {...item} />}
+              ListEmptyComponent={VehiclesEmpty}
+              contentContainerStyle={{
+                gap: 26,
+                width: VEHICLES.length > 0 ? "auto" : "100 %",
+              }}
+            />
           </View>
         </View>
       </ScrollView>

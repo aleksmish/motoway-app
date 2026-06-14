@@ -45,6 +45,15 @@ declare global {
     daysLeft: number;
   }
 
+  interface Vehicle {
+    id: string;
+    image: string;
+    brand: string;
+    model: string;
+    modelYear: number;
+    mileAge: number;
+  }
+
   interface UpcomingSubscriptionCardProps extends Omit<
     UpcomingSubscription,
     "id"
