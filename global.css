@@ -5,7 +5,7 @@
 @import "nativewind/theme";
 
 @theme {
-  --color-background: #fff;
+  --color-background: #fff9e3;
   --color-foreground: #081126;
   --color-card: #fff8e7;
   --color-muted: #f6eecf;
@@ -141,7 +141,7 @@
 }
 
 .profile-garage__vehicle-empty-pressable {
-  @apply w-full;
+  @apply border border-black/10 shadow-md rounded-3xl w-full;
 }
 
 .profile-garage__vehicle {
@@ -165,7 +165,7 @@
 }
 
 .profile-garage__vehicle-empty {
-  @apply min-h-80 flex flex-col justify-center items-center shadow-md rounded-3xl w-full;
+  @apply min-h-80 flex flex-col justify-center items-center rounded-3xl w-full;
 }
 
 .profile-garage__vehicle-empty-add {

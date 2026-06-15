@@ -1,6 +1,5 @@
-import { Image } from "expo-image";
 import React from "react";
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 
 const VehicleCard = ({ id, image, brand, model, modelYear }: Vehicle) => {
   return (

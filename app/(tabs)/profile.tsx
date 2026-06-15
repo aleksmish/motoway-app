@@ -2,10 +2,16 @@ import VehicleCard from "@/components/VehicleCard";
 import VehiclesEmpty from "@/components/VehiclesEmpty";
 import { profileSettingsIcon } from "@/constants/data";
 import images from "@/constants/images";
-import { Image } from "expo-image";
 import { styled } from "nativewind";
 import React from "react";
-import { FlatList, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView as RNSafeAreView } from "react-native-safe-area-context";
 
 const VEHICLES = [
@@ -45,10 +51,7 @@ const SafeAreaView = styled(RNSafeAreView);
 
 const Profile = () => {
   return (
-    <SafeAreaView
-      className="flex-1 bg-background p-5"
-      style={{ padding: "auto" }}
-    >
+    <SafeAreaView className="flex-1 bg-background p-5">
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="profile-header">
           <View className="profile-user">
@@ -104,7 +107,7 @@ const Profile = () => {
               ListEmptyComponent={VehiclesEmpty}
               contentContainerStyle={{
                 gap: 26,
-                width: VEHICLES.length > 0 ? "auto" : "100 %",
+                width: VEHICLES.length > 0 ? "auto" : "100%",
               }}
             />
           </View>
