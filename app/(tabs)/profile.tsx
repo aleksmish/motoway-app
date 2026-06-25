@@ -54,12 +54,12 @@ const Profile = () => {
     <SafeAreaView className="flex-1 bg-background p-5">
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="profile-header">
-          <View className="profile-user">
-            <Image
-              resizeMode="contain"
-              source={images.avatar}
-              className="profile-avatar"
-            />
+          <Image
+            resizeMode="contain"
+            source={images.avatar}
+            className="profile-avatar"
+          />
+          <View className="profile-sub-header">
             <View className="profile-info">
               <Text className="profile-user-name">Robin Banks</Text>
               <Text>Moscow, Russia</Text>
@@ -69,10 +69,7 @@ const Profile = () => {
                 </Text>
               </View>
             </View>
-            <Pressable
-              style={({ pressed }) => pressed && { opacity: 0.6 }}
-              className="profile-settings__container"
-            >
+            <Pressable className="profile-settings-container">
               <Image
                 className="profile-settings"
                 source={profileSettingsIcon}

@@ -69,15 +69,15 @@
 }
 
 .profile-header {
-  @apply mb-2.5 flex-row items-center justify-between;
+  @apply mb-2.5 flex-row items-center w-full;
 }
 
-.profile-user {
-  @apply flex-row items-center w-full;
+.profile-sub-header {
+  @apply flex flex-row justify-between flex-1;
 }
 
 .profile-info {
-  @apply ml-4 flex-col w-full;
+  @apply ml-4 flex-col;
 }
 
 .profile-avatar {
@@ -92,8 +92,8 @@
   @apply size-12;
 }
 
-.profile-settings__container {
-  @apply absolute right-0 top-1;
+.profile-settings-container {
+  @apply active:opacity-50;
 }
 
 .profile-settings {
@@ -141,7 +141,7 @@
 }
 
 .profile-garage__vehicle-empty-pressable {
-  @apply border border-black/10 shadow-md rounded-3xl w-full;
+  @apply border border-black/10 shadow-md rounded-3xl w-full active:opacity-50;
 }
 
 .profile-garage__vehicle {

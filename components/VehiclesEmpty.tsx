@@ -4,10 +4,7 @@ import { Image, Pressable, Text, View } from "react-native";
 
 const VehiclesEmpty = () => {
   return (
-    <Pressable
-      className="profile-garage__vehicle-empty-pressable"
-      style={({ pressed }) => pressed && { opacity: 0.6 }}
-    >
+    <Pressable className="profile-garage__vehicle-empty-pressable">
       <View className="profile-garage__vehicle-empty">
         <Image className="profile-garage__vehicle-empty-add" source={addIcon} />
         <Text>Add vehicle</Text>
