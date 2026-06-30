@@ -15,6 +15,7 @@ import medium from "@/assets/icons/medium.png";
 import menu from "@/assets/icons/menu.png";
 import notion from "@/assets/icons/notion.png";
 import openai from "@/assets/icons/openai.png";
+import photoCamera from "@/assets/icons/photo-camera.png";
 import plus from "@/assets/icons/plus.png";
 import routes from "@/assets/icons/routes.png";
 import setting from "@/assets/icons/setting.png";
@@ -50,6 +51,7 @@ export const icons = {
   routes,
   settings,
   settingsBlack,
+  photoCamera,
 } as const;
 
 export type IconKey = keyof typeof icons;

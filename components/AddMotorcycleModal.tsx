@@ -1,0 +1,136 @@
+import { photoCamera } from "@/constants/data";
+import * as ImagePicker from "expo-image-picker";
+import { styled } from "nativewind";
+import React, { useState } from "react";
+import {
+  Image,
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { SafeAreaView as RNSafeAreView } from "react-native-safe-area-context";
+
+export default function AddMotorcycleModal({
+  visible,
+  onClose,
+}: AddMotorcycleModalProps) {
+  const SafeAreaView = styled(RNSafeAreView);
+
+  const [selectedImage, setSelectedImage] = useState("");
+
+  const handleClose = () => {
+    onClose();
+  };
+
+  const pickImageAsync = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+      allowsMultipleSelection: false,
+      aspect: [318, 248],
+      mediaTypes: ["images"],
+    });
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+      console.log(result);
+    } else {
+      alert("You did not select any image");
+    }
+  };
+
+  return (
+    <Modal
+      transparent
+      visible={visible}
+      animationType="slide"
+      onRequestClose={onClose}
+    >
+      <SafeAreaView className="flex-1 bg-background">
+        <Pressable
+          className="modal-container"
+          onPress={(e) => e.stopPropagation()}
+        >
+          <View className="modal-header">
+            <Pressable className="modal-close" onPress={handleClose}>
+              <Text className="modal-close-text">✕</Text>
+            </Pressable>
+            <Text className="modal-title">Add Vehicle</Text>
+          </View>
+          <ScrollView
+            className="p-5"
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{ gap: 20, paddingBottom: 20 }}
+          >
+            <Pressable
+              className="modal-add-photo-pressable"
+              onPress={pickImageAsync}
+            >
+              <View className="modal-add-photo">
+                <Image source={photoCamera} className="modal-add-photo-image" />
+                <Text className="modal-add-photo-text">Add photo</Text>
+              </View>
+            </Pressable>
+            <View className="auth-field">
+              <TextInput
+                className="auth-input"
+                placeholder="Name"
+                placeholderTextColor="rgba(0, 0, 0, 0.4)"
+              />
+            </View>
+            <View className="auth-field">
+              <TextInput
+                className="auth-input"
+                placeholder="Make"
+                placeholderTextColor="rgba(0, 0, 0, 0.4)"
+              />
+            </View>
+            <View className="auth-field">
+              <TextInput
+                className="auth-input"
+                placeholder="Model"
+                placeholderTextColor="rgba(0, 0, 0, 0.4)"
+              />
+            </View>
+            <View className="auth-field">
+              <TextInput
+                className="auth-input"
+                placeholder="Horsepower"
+                placeholderTextColor="rgba(0, 0, 0, 0.4)"
+              />
+            </View>
+            <View className="auth-field">
+              <TextInput
+                className="auth-input"
+                placeholder="Year built"
+                placeholderTextColor="rgba(0, 0, 0, 0.4)"
+              />
+            </View>
+            <View className="auth-field">
+              <TextInput
+                className="auth-input"
+                placeholder="Color"
+                placeholderTextColor="rgba(0, 0, 0, 0.4)"
+                keyboardType="decimal-pad"
+              />
+            </View>
+            <View className="auth-field">
+              <TextInput
+                className="auth-input"
+                placeholder="Type"
+                placeholderTextColor="rgba(0, 0, 0, 0.4)"
+                keyboardType="decimal-pad"
+              />
+            </View>
+            <Pressable className="auth-button">
+              <Text className="auth-button-text">Add Vehicle</Text>
+            </Pressable>
+          </ScrollView>
+        </Pressable>
+      </SafeAreaView>
+    </Modal>
+  );
+}

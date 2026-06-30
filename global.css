@@ -140,10 +140,6 @@
   @apply w-full pb-4;
 }
 
-.profile-garage__vehicle-empty-pressable {
-  @apply border border-black/10 shadow-md rounded-3xl w-full active:opacity-50;
-}
-
 .profile-garage__vehicle {
   @apply min-h-80 min-w-80 flex flex-col justify-between shadow-xs rounded-3xl border border-black/10;
 }
@@ -162,6 +158,10 @@
 
 .profile-garage__vehicle-brand-model {
   @apply font-sans-bold;
+}
+
+.profile-garage__vehicle-empty-pressable {
+  @apply border border-black/10 shadow-md rounded-3xl w-full active:opacity-50;
 }
 
 .profile-garage__vehicle-empty {
@@ -361,7 +361,7 @@
 }
 
 .auth-input {
-  @apply rounded-2xl border border-border bg-background px-4 py-4 text-base font-sans-medium text-primary;
+  @apply rounded-xl border border-border bg-background text-base pl-4 pr-4 pt-4 pb-4 font-sans-medium text-primary;
 }
 
 .auth-input-error {
@@ -377,7 +377,7 @@
 }
 
 .auth-button {
-  @apply mt-1 items-center rounded-2xl bg-accent py-4;
+  @apply mb-2 mt-1 items-center rounded-2xl bg-accent py-4 active:opacity-70;
 }
 
 .auth-button-disabled {
@@ -425,7 +425,7 @@
 }
 
 .modal-container {
-  @apply mt-auto max-h-[85%] rounded-t-3xl bg-background;
+  @apply flex-1 mt-auto rounded-t-3xl bg-background;
 }
 
 .modal-header {
@@ -436,8 +436,24 @@
   @apply text-xl font-sans-bold text-primary;
 }
 
+.modal-add-photo-pressable {
+  @apply border border-black/10 shadow-md rounded-3xl w-full active:opacity-50;
+}
+
+.modal-add-photo {
+  @apply min-h-80 flex flex-row gap-2 justify-center items-center w-full;
+}
+
+.modal-add-photo-image {
+  @apply size-6;
+}
+
+.modal-add-photo-text {
+  @apply font-sans-semibold;
+}
+
 .modal-close {
-  @apply size-8 items-center justify-center rounded-full bg-muted;
+  @apply size-10 items-center justify-center rounded-full bg-muted active:opacity-50;
 }
 
 .modal-close-text {

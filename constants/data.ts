@@ -10,3 +10,4 @@ export const tabs = [
 
 export const profileSettingsIcon = icons.settingsBlack;
 export const addIcon = icons.add;
+export const photoCamera = icons.photoCamera;

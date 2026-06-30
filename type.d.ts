@@ -36,6 +36,11 @@ declare global {
     isCancelling?: boolean;
   }
 
+  interface AddMotorcycleModalProps {
+    visible: boolean;
+    onClose: () => void;
+  }
+
   interface UpcomingSubscription {
     id: string;
     icon: ImageSourcePropType;
