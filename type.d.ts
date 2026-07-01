@@ -39,6 +39,11 @@ declare global {
   interface AddMotorcycleModalProps {
     visible: boolean;
     onClose: () => void;
+    onAddVehicle: (vehicle: Vehicle) => void;
+  }
+
+  interface VehiclesEmptyProps {
+    onAddVehicle: (vehicle: Vehicle) => void;
   }
 
   interface UpcomingSubscription {
@@ -53,10 +58,12 @@ declare global {
   interface Vehicle {
     id: string;
     image: string;
-    brand: string;
+    name: string;
+    make: string;
+    horsepower: number;
+    color: string;
     model: string;
-    modelYear: number;
-    mileAge: number;
+    yearBuilt: number;
   }
 
   interface UpcomingSubscriptionCardProps extends Omit<

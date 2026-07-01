@@ -452,6 +452,14 @@
   @apply font-sans-semibold;
 }
 
+.modal-image-container {
+  @apply border border-black/10 shadow-md rounded-3xl aspect-318/248;
+}
+
+.modal-image {
+  @apply w-full h-full rounded-t-3xl rounded-b-3xl;
+}
+
 .modal-close {
   @apply size-10 items-center justify-center rounded-full bg-muted active:opacity-50;
 }

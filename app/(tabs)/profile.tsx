@@ -17,39 +17,45 @@ import { SafeAreaView as RNSafeAreView } from "react-native-safe-area-context";
 const VEHICLES = [
   {
     id: "1",
-    brand: "Kawasaki",
-    model: "Ninja 650",
-    modelYear: 2006,
-    cc: 649,
-    mileAge: 15000,
     image:
       "https://content2.kawasaki.com/ContentStorage/KMC/ProductTrimGroup/18/0d00b2e1-35c8-456d-93b6-c7e22cd914bb.jpg?w=1500",
+    name: "Kawasaki Ninja ZX-10R",
+    make: "Kawasaki Heavy Industries",
+    horsepower: 203,
+    model: "Ninja ZX-10R",
+    yearBuilt: 2025,
+    color: "Black",
   },
   {
     id: "2",
-    brand: "Kawasaki",
-    model: "Ninja 650",
-    modelYear: 2006,
-    cc: 649,
-    mileAge: 15000,
     image:
       "https://content2.kawasaki.com/ContentStorage/KMC/ProductTrimGroup/18/0d00b2e1-35c8-456d-93b6-c7e22cd914bb.jpg?w=1500",
+    name: "Kawasaki Ninja ZX-10R",
+    make: "Kawasaki Heavy Industries",
+    horsepower: 203,
+    model: "Ninja ZX-10R",
+    color: "Black",
+    yearBuilt: 2025,
   },
   {
     id: "3",
-    brand: "Kawasaki",
-    model: "Ninja 650",
-    modelYear: 2006,
-    cc: 649,
-    mileAge: 15000,
     image:
       "https://content2.kawasaki.com/ContentStorage/KMC/ProductTrimGroup/18/0d00b2e1-35c8-456d-93b6-c7e22cd914bb.jpg?w=1500",
+    name: "Kawasaki Ninja ZX-10R",
+    make: "Kawasaki Heavy Industries",
+    horsepower: 203,
+    model: "Ninja ZX-10R",
+    color: "Black",
+    yearBuilt: 2025,
   },
 ];
 
 const SafeAreaView = styled(RNSafeAreView);
 
 const Profile = () => {
+  const handleAddVehicle = (vehicle: Vehicle) => {
+    VEHICLES.push(vehicle);
+  };
   return (
     <SafeAreaView className="flex-1 bg-background p-5">
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -93,6 +99,7 @@ const Profile = () => {
         </View>
         <View className="profile-garage">
           <Text className="profile-garage__title">My Garage</Text>
+          <VehiclesEmpty onAddVehicle={handleAddVehicle} />
           <View className="profile-garage__vehicles">
             <FlatList
               data={VEHICLES}
@@ -101,7 +108,11 @@ const Profile = () => {
               horizontal
               keyExtractor={(item) => String(item.id)}
               renderItem={({ item }) => <VehicleCard {...item} />}
-              ListEmptyComponent={VehiclesEmpty}
+              ListEmptyComponent={
+                <>
+                  <VehiclesEmpty onAddVehicle={handleAddVehicle} />
+                </>
+              }
               contentContainerStyle={{
                 gap: 26,
                 width: VEHICLES.length > 0 ? "auto" : "100%",

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import AddMotorcycleModal from "./AddMotorcycleModal";
 
-const VehiclesEmpty = () => {
+const VehiclesEmpty = ({ onAddVehicle }: VehiclesEmptyProps) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const openModal = () => {
@@ -23,7 +23,11 @@ const VehiclesEmpty = () => {
         <Text>Add vehicle</Text>
       </View>
       <>
-        <AddMotorcycleModal visible={isModalVisible} onClose={closeModal} />
+        <AddMotorcycleModal
+          visible={isModalVisible}
+          onClose={closeModal}
+          onAddVehicle={onAddVehicle}
+        />
       </>
     </Pressable>
   );
