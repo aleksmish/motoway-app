@@ -67,11 +67,11 @@ const Profile = () => {
           />
           <View className="profile-sub-header">
             <View className="profile-info">
-              <Text className="profile-user-name">Robin Banks</Text>
-              <Text>Moscow, Russia</Text>
+              <Text className="profile-user-name">Александр Иванов</Text>
+              <Text>Москва, Россия</Text>
               <View>
                 <Text>
-                  <Text>0</Text> Friends
+                  <Text>0</Text> Друзей
                 </Text>
               </View>
             </View>
@@ -86,20 +86,19 @@ const Profile = () => {
         <View className="profile-stats ">
           <View className="profile-sessions">
             <Text className="profile-stats__text-bold">0</Text>
-            <Text className="profile-stats__text">Sessions</Text>
+            <Text className="profile-stats__text">Поездок</Text>
           </View>
           <View className="profile-miles">
-            <Text className="profile-stats__text-bold">0 miles</Text>
-            <Text className="profile-stats__text">Total distance</Text>
+            <Text className="profile-stats__text-bold">0 км</Text>
+            <Text className="profile-stats__text">Дистанция</Text>
           </View>
           <View className="profile-duration">
-            <Text className="profile-stats__text-bold">0 min</Text>
-            <Text className="profile-stats__text">Duration</Text>
+            <Text className="profile-stats__text-bold">0 мин</Text>
+            <Text className="profile-stats__text">Время</Text>
           </View>
         </View>
         <View className="profile-garage">
-          <Text className="profile-garage__title">My Garage</Text>
-          <VehiclesEmpty onAddVehicle={handleAddVehicle} />
+          <Text className="profile-garage__title">Мой гараж</Text>
           <View className="profile-garage__vehicles">
             <FlatList
               data={VEHICLES}

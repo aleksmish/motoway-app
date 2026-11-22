@@ -20,7 +20,7 @@ const VehiclesEmpty = ({ onAddVehicle }: VehiclesEmptyProps) => {
     >
       <View className="profile-garage__vehicle-empty">
         <Image className="profile-garage__vehicle-empty-add" source={addIcon} />
-        <Text>Add vehicle</Text>
+        <Text>Добавить мотоцикл</Text>
       </View>
       <>
         <AddMotorcycleModal

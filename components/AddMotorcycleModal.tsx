@@ -87,7 +87,6 @@ export default function AddMotorcycleModal({
     });
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
-      console.log(result);
     } else {
       alert("You did not select any image");
     }
@@ -114,7 +113,8 @@ export default function AddMotorcycleModal({
                 <Pressable className="modal-close" onPress={handleClose}>
                   <Text className="modal-close-text">✕</Text>
                 </Pressable>
-                <Text className="modal-title">Add Vehicle</Text>
+                <Text className="modal-title">Добавить транспорт
+                </Text>
               </View>
               <ScrollView
                 className="p-5"
@@ -132,7 +132,7 @@ export default function AddMotorcycleModal({
                         source={photoCamera}
                         className="modal-add-photo-image"
                       />
-                      <Text className="modal-add-photo-text">Add photo</Text>
+                      <Text className="modal-add-photo-text">Добавить фотографию</Text>
                     </View>
                   </Pressable>
                 ) : (
@@ -147,7 +147,7 @@ export default function AddMotorcycleModal({
                 <View className="auth-field">
                   <TextInput
                     className="auth-input"
-                    placeholder="Name"
+                    placeholder="Имя"
                     placeholderTextColor="rgba(0, 0, 0, 0.4)"
                     onChangeText={setName}
                     value={name}
@@ -156,7 +156,7 @@ export default function AddMotorcycleModal({
                 <View className="auth-field">
                   <TextInput
                     className="auth-input"
-                    placeholder="Make"
+                    placeholder="Марка"
                     placeholderTextColor="rgba(0, 0, 0, 0.4)"
                     onChangeText={setMake}
                     value={make}
@@ -165,7 +165,7 @@ export default function AddMotorcycleModal({
                 <View className="auth-field">
                   <TextInput
                     className="auth-input"
-                    placeholder="Model"
+                    placeholder="Модель"
                     placeholderTextColor="rgba(0, 0, 0, 0.4)"
                     onChangeText={setModel}
                     value={model}
@@ -175,7 +175,7 @@ export default function AddMotorcycleModal({
                   <TextInput
                     keyboardType="numeric"
                     className="auth-input"
-                    placeholder="Horsepower"
+                    placeholder="Мощность двигателя"
                     placeholderTextColor="rgba(0, 0, 0, 0.4)"
                     onChangeText={(val) => setHorsepower(val)}
                     value={horsepower}
@@ -185,7 +185,7 @@ export default function AddMotorcycleModal({
                   <TextInput
                     keyboardType="numeric"
                     className="auth-input"
-                    placeholder="Year built"
+                    placeholder="Год выпуска"
                     placeholderTextColor="rgba(0, 0, 0, 0.4)"
                     onChangeText={(val) => setYearBuilt(val)}
                     value={yearBuilt}
@@ -194,7 +194,7 @@ export default function AddMotorcycleModal({
                 <View className="auth-field">
                   <TextInput
                     className="auth-input"
-                    placeholder="Color"
+                    placeholder="Цвет"
                     placeholderTextColor="rgba(0, 0, 0, 0.4)"
                     onChangeText={setColor}
                     value={color}
@@ -204,7 +204,7 @@ export default function AddMotorcycleModal({
                   className="auth-button"
                   onPress={() => handleSubmit()}
                 >
-                  <Text className="auth-button-text">Add Vehicle</Text>
+                  <Text className="auth-button-text">Добавить транспорт</Text>
                 </Pressable>
               </ScrollView>
             </Pressable>
