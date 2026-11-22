@@ -1,3 +1,9 @@
+import {
+  formatDistance,
+  formatDuration,
+  Route,
+  useRouteStore,
+} from "@/store/useRouteStore";
 import { useRouter } from "expo-router";
 import { styled } from "nativewind";
 import React, { useState } from "react";
@@ -6,90 +12,21 @@ import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
-interface MotoRoute {
-  id: string;
-  title: string;
-  region: string;
-  distance: string;
-  duration: string;
-  curves: number;
-  difficulty: "Лёгкий" | "Средний" | "Серпантин";
-  isFavorite: boolean;
-  isCompleted: boolean;
-  author: string;
-}
-
-const INITIAL_ROUTES: MotoRoute[] = [
-  {
-    id: "1",
-    title: "Зеленоград — Сергиев Посад",
-    region: "Московская область",
-    distance: "88 км",
-    duration: "1 ч 24 мин",
-    curves: 74,
-    difficulty: "Средний",
-    isFavorite: true,
-    isCompleted: true,
-    author: "Александр Иванов",
-  },
-  {
-    id: "2",
-    title: "Дмитровские холмы и Яхрома",
-    region: "Север Подмосковья",
-    distance: "114 км",
-    duration: "1 ч 48 мин",
-    curves: 118,
-    difficulty: "Серпантин",
-    isFavorite: true,
-    isCompleted: false,
-    author: "Дмитрий Соколов",
-  },
-  {
-    id: "3",
-    title: "Новорижский прохват до Истры",
-    region: "Запад Подмосковья",
-    distance: "62 км",
-    duration: "49 мин",
-    curves: 31,
-    difficulty: "Лёгкий",
-    isFavorite: false,
-    isCompleted: true,
-    author: "Артём Волков",
-  },
-  {
-    id: "4",
-    title: "Приокский серпантин • Таруса",
-    region: "Калужская область",
-    distance: "156 км",
-    duration: "2 ч 30 мин",
-    curves: 164,
-    difficulty: "Серпантин",
-    isFavorite: false,
-    isCompleted: false,
-    author: "Редакция MotoWay",
-  },
-];
-
 const Routes = () => {
   const router = useRouter();
-  const [routes, setRoutes] = useState<MotoRoute[]>(INITIAL_ROUTES);
+  const routes = useRouteStore((state) => state.routes);
   const [activeTab, setActiveTab] = useState<"all" | "favorites" | "history">(
-    "all"
+    "all",
   );
   const [searchQuery, setSearchQuery] = useState("");
+  const selectRouteForMap = useRouteStore((s) => s.selectRouteForMap);
 
-  const toggleFavorite = (id: string) => {
-    setRoutes((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
-      )
-    );
-  };
+  const toggleFavorite = useRouteStore((s) => s.toggleFavorite);
 
-  const handleOpenOnMap = (route: MotoRoute) => {
+  const handleOpenOnMap = (route: Route) => {
+    selectRouteForMap(route);
     router.push({
       pathname: "/(tabs)/map",
-      params: { routeTitle: route.title },
     });
   };
 
@@ -117,7 +54,7 @@ const Routes = () => {
     },
   ];
 
-  const renderRouteCard = ({ item }: { item: MotoRoute }) => (
+  const renderRouteCard = ({ item }: { item: Route }) => (
     <View className="mb-3 rounded-2xl border border-border bg-card p-4">
       <View className="flex-row items-start justify-between">
         <View className="flex-1 pr-2">
@@ -159,7 +96,7 @@ const Routes = () => {
       <View className="my-3 flex-row items-center justify-between rounded-xl bg-muted px-3.5 py-2.5">
         <View>
           <Text className="font-sans-bold text-sm text-primary">
-            {item.distance}
+            {formatDistance(item.distance)}
           </Text>
           <Text className="font-sans-medium text-xs text-muted-foreground">
             Дистанция
@@ -168,7 +105,7 @@ const Routes = () => {
 
         <View>
           <Text className="font-sans-bold text-sm text-primary">
-            {item.duration}
+            {formatDuration(item.duration)}
           </Text>
           <Text className="font-sans-medium text-xs text-muted-foreground">
             В пути

@@ -2,6 +2,8 @@ import VehicleCard from "@/components/VehicleCard";
 import VehiclesEmpty from "@/components/VehiclesEmpty";
 import { profileSettingsIcon } from "@/constants/data";
 import images from "@/constants/images";
+import { useGarageStore } from "@/store/useGarageStore";
+import { getCompletedStats, useRouteStore } from "@/store/useRouteStore";
 import { styled } from "nativewind";
 import React from "react";
 import {
@@ -14,48 +16,16 @@ import {
 } from "react-native";
 import { SafeAreaView as RNSafeAreView } from "react-native-safe-area-context";
 
-const VEHICLES = [
-  {
-    id: "1",
-    image:
-      "https://content2.kawasaki.com/ContentStorage/KMC/ProductTrimGroup/18/0d00b2e1-35c8-456d-93b6-c7e22cd914bb.jpg?w=1500",
-    name: "Kawasaki Ninja ZX-10R",
-    make: "Kawasaki Heavy Industries",
-    horsepower: 203,
-    model: "Ninja ZX-10R",
-    yearBuilt: 2025,
-    color: "Black",
-  },
-  {
-    id: "2",
-    image:
-      "https://content2.kawasaki.com/ContentStorage/KMC/ProductTrimGroup/18/0d00b2e1-35c8-456d-93b6-c7e22cd914bb.jpg?w=1500",
-    name: "Kawasaki Ninja ZX-10R",
-    make: "Kawasaki Heavy Industries",
-    horsepower: 203,
-    model: "Ninja ZX-10R",
-    color: "Black",
-    yearBuilt: 2025,
-  },
-  {
-    id: "3",
-    image:
-      "https://content2.kawasaki.com/ContentStorage/KMC/ProductTrimGroup/18/0d00b2e1-35c8-456d-93b6-c7e22cd914bb.jpg?w=1500",
-    name: "Kawasaki Ninja ZX-10R",
-    make: "Kawasaki Heavy Industries",
-    horsepower: 203,
-    model: "Ninja ZX-10R",
-    color: "Black",
-    yearBuilt: 2025,
-  },
-];
-
 const SafeAreaView = styled(RNSafeAreView);
 
 const Profile = () => {
+  const { vehicles, addVehicle } = useGarageStore();
+  const { routes } = useRouteStore();
   const handleAddVehicle = (vehicle: Vehicle) => {
-    VEHICLES.push(vehicle);
+    addVehicle(vehicle);
   };
+  const { totalRides, totalDistanceKm, totalDuration } =
+    getCompletedStats(routes);
   return (
     <SafeAreaView className="flex-1 bg-background p-5">
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -85,15 +55,15 @@ const Profile = () => {
         </View>
         <View className="profile-stats ">
           <View className="profile-sessions">
-            <Text className="profile-stats__text-bold">0</Text>
+            <Text className="profile-stats__text-bold">{totalRides}</Text>
             <Text className="profile-stats__text">Поездок</Text>
           </View>
           <View className="profile-miles">
-            <Text className="profile-stats__text-bold">0 км</Text>
+            <Text className="profile-stats__text-bold">{totalDistanceKm}</Text>
             <Text className="profile-stats__text">Дистанция</Text>
           </View>
           <View className="profile-duration">
-            <Text className="profile-stats__text-bold">0 мин</Text>
+            <Text className="profile-stats__text-bold">{totalDuration}</Text>
             <Text className="profile-stats__text">Время</Text>
           </View>
         </View>
@@ -101,7 +71,7 @@ const Profile = () => {
           <Text className="profile-garage__title">Мой гараж</Text>
           <View className="profile-garage__vehicles">
             <FlatList
-              data={VEHICLES}
+              data={vehicles}
               showsHorizontalScrollIndicator={false}
               className="profile-garage__vehicles-scroll"
               horizontal
@@ -114,7 +84,7 @@ const Profile = () => {
               }
               contentContainerStyle={{
                 gap: 26,
-                width: VEHICLES.length > 0 ? "auto" : "100%",
+                width: vehicles.length > 0 ? "auto" : "100%",
               }}
             />
           </View>

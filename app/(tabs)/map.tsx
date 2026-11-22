@@ -1,16 +1,19 @@
+import { formatDistance, useRouteStore } from "@/store/useRouteStore";
 import {
   Camera,
+  CameraRef,
   GeoJSONSource,
   Layer,
   Map,
   Marker,
   StyleSpecification,
   type LngLat,
-} from '@maplibre/maplibre-react-native';
-import { styled } from 'nativewind';
-import React, { useState } from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
-import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context';
+} from "@maplibre/maplibre-react-native";
+import { useFocusEffect, useRouter } from "expo-router";
+import { styled } from "nativewind";
+import React, { useCallback, useRef, useState } from "react";
+import { ActivityIndicator, Alert, Pressable, Text, View } from "react-native";
+import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
 const DEFAULT_CENTER: LngLat = [37.1814, 55.9825]; // Zelenograd
@@ -19,40 +22,85 @@ const MAP_STYLE: StyleSpecification = {
   version: 8,
   sources: {
     osm: {
-      type: 'raster',
-      tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+      type: "raster",
+      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
       tileSize: 256,
     },
   },
-  layers: [{ id: 'osm-layer', type: 'raster', source: 'osm' }],
+  layers: [{ id: "osm-layer", type: "raster", source: "osm" }],
 };
 
 export default function MotoMap() {
-  const [activeMode, setActiveMode] = useState<'start' | 'end'>('start');
+  const router = useRouter();
+  const [isRiding, setIsRiding] = useState(false);
+  const [seconds, setSeconds] = useState(0);
+
+  const addRoute = useRouteStore((store) => store.addRoute);
+
+  // Таймер во время поездки
+  React.useEffect(() => {
+    if (!isRiding) return;
+    const id = setInterval(() => setSeconds((s) => s + 1), 1000);
+    return () => clearInterval(id);
+  }, [isRiding]);
+
+  const formatTime = (sec: number) => {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
+
+  const handleSaveToRoutes = () => {
+    addRoute({
+      title: `${startStreet} — ${destStreet}`,
+      region: "Мой маршрут",
+      distance: Number(distance) || 0,
+      duration: Number(duration) || 900,
+      curves: Math.max(12, Math.round(routeCoords.length / 4)),
+      difficulty: Number(distance) > 90000 ? "Серпантин" : "Средний",
+      isFavorite: true,
+      isCompleted: false,
+      author: "Александр Иванов",
+      coords: routeCoords,
+    });
+    Alert.alert(
+      "Маршрут сохранён",
+      `${startStreet} — ${destStreet} (${formatDistance(distance)}) добавлен в ваши маршруты.`,
+    );
+    router.push({
+      pathname: "/(tabs)/routes",
+    });
+  };
+
+  const selectedRoute = useRouteStore((store) => store.selectedRoute);
+  const selectRouteForMap = useRouteStore((store) => store.selectRouteForMap);
+  const markRouteCompleted = useRouteStore((store) => store.markRouteCompleted);
+  const completeRide = useRouteStore((store) => store.completeRide);
+  const [activeMode, setActiveMode] = useState<"start" | "end">("start");
 
   const [startPoint, setStartPoint] = useState<LngLat | null>(DEFAULT_CENTER);
-  const [startStreet, setStartStreet] = useState('Зеленоград (старт)');
+  const [startStreet, setStartStreet] = useState("Зеленоград (старт)");
 
   const [destPoint, setDestPoint] = useState<LngLat | null>(null);
-  const [destStreet, setDestStreet] = useState('Нажмите на карту');
+  const [destStreet, setDestStreet] = useState("Нажмите на карту");
 
   const [routeCoords, setRouteCoords] = useState<LngLat[]>([]);
-  const [distanceKm, setDistanceKm] = useState<string | null>(null);
-  const [durationMin, setDurationMin] = useState<number | null>(null);
+  const [distance, setDistance] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
   const [loading, setLoading] = useState(false);
 
   const fetchStreetName = async ([lon, lat]: LngLat): Promise<string> => {
     try {
-      const nominatimHost = ['nominatim', 'openstreetmap', 'org'].join('.');
+      const nominatimHost = ["nominatim", "openstreetmap", "org"].join(".");
       const geoUrl = `https://${nominatimHost}/reverse?format=jsonv2&lat=${lat}&lon=${lon}&accept-language=ru`;
       const geoRes = await fetch(geoUrl, {
-        headers: { 'User-Agent': 'MotoWayStudentApp/1.0' },
+        headers: { "User-Agent": "MotoWayStudentApp/1.0" },
       });
       const geoData = await geoRes.json();
       return (
         geoData?.address?.road ||
         geoData?.address?.suburb ||
-        geoData?.display_name?.split(',')[0] ||
+        geoData?.display_name?.split(",")[0] ||
         `${lat.toFixed(4)}, ${lon.toFixed(4)}`
       );
     } catch {
@@ -62,7 +110,7 @@ export default function MotoMap() {
 
   const buildRoute = async (from: LngLat, to: LngLat) => {
     try {
-      const osrmHost = ['router', 'project-osrm', 'org'].join('.');
+      const osrmHost = ["router", "project-osrm", "org"].join(".");
       const routeUrl = `https://${osrmHost}/route/v1/driving/${from[0]},${from[1]};${to[0]},${to[1]}?overview=full&geometries=geojson`;
       const routeRes = await fetch(routeUrl);
       const routeData = await routeRes.json();
@@ -71,24 +119,27 @@ export default function MotoMap() {
 
       if (trip && trip.length > 0) {
         setRouteCoords(trip);
-        setDistanceKm((firstRoute.distance / 1000).toFixed(1));
-        setDurationMin(Math.round(firstRoute.duration / 60));
+        setDistance(Math.floor(firstRoute.distance));
+        setDuration(Math.floor(firstRoute.duration * 1.45));
       } else {
         setRouteCoords([from, to]);
-        setDistanceKm(null);
-        setDurationMin(null);
+        setDistance(0);
+        setDuration(0);
       }
     } catch (err) {
-      console.log('Route lookup error:', err);
+      console.log("Route lookup error:", err);
       setRouteCoords([from, to]);
-      setDistanceKm(null);
-      setDurationMin(null);
+      setDistance(0);
+      setDuration(0);
     }
   };
-
+  const cameraRef = useRef<CameraRef>(null);
   const handleMapPress = async (event: any) => {
+    selectRouteForMap(null);
     const coords: LngLat =
-      event?.lngLat || event?.nativeEvent?.lngLat || event?.geometry?.coordinates;
+      event?.lngLat ||
+      event?.nativeEvent?.lngLat ||
+      event?.geometry?.coordinates;
     if (!coords) return;
 
     setLoading(true);
@@ -96,18 +147,18 @@ export default function MotoMap() {
     let nextStart = startPoint;
     let nextDest = destPoint;
 
-    if (activeMode === 'start') {
+    if (activeMode === "start") {
       nextStart = coords;
       setStartPoint(coords);
-      setStartStreet('Загрузка адреса...');
-      setActiveMode('end');
+      setStartStreet("Загрузка адреса...");
+      setActiveMode("end");
 
       const name = await fetchStreetName(coords);
       setStartStreet(name);
     } else {
       nextDest = coords;
       setDestPoint(coords);
-      setDestStreet('Загрузка адреса...');
+      setDestStreet("Загрузка адреса...");
 
       const name = await fetchStreetName(coords);
       setDestStreet(name);
@@ -120,23 +171,77 @@ export default function MotoMap() {
     setLoading(false);
   };
 
+  const handleFinishRide = () => {
+    if (selectedRoute) {
+      markRouteCompleted(selectedRoute.id);
+    } else if (routeCoords.length > 1) {
+      completeRide({
+        title: `${startStreet} — ${destStreet}`,
+        region: "Мой маршрут",
+        distance: Number(distance) || 0,
+        duration: Number(seconds),
+        curves: Math.max(12, Math.round(routeCoords.length / 4)),
+        difficulty: Number(distance) > 90000 ? "Серпантин" : "Средний",
+        isFavorite: true,
+        isCompleted: false,
+        author: "Александр Иванов",
+        coords: routeCoords,
+      });
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!selectedRoute || selectedRoute.coords.length < 2) return;
+
+      const first = selectedRoute.coords.at(0) as LngLat;
+      const last = selectedRoute.coords.at(-1) as LngLat;
+      const mid = selectedRoute.coords.at(
+        Math.floor(selectedRoute.coords.length / 2),
+      ) as LngLat;
+
+      const parts = selectedRoute.title.split("—");
+
+      setStartPoint(first);
+      setDestPoint(last);
+      setStartStreet(parts.at(0)?.trim() || "Старт маршрута");
+      setDestStreet(parts.at(1)?.trim() || selectedRoute.title);
+      setRouteCoords(selectedRoute.coords);
+      setDistance(selectedRoute.distance);
+      setDuration(0);
+
+      setTimeout(() => {
+        cameraRef?.current?.flyTo({
+          center: first,
+          zoom: 9,
+          duration: 600,
+        });
+      }, 150);
+
+      if (selectedRoute.coords.length <= 5) {
+        setLoading(true);
+        buildRoute(first, last).finally(() => setLoading(false));
+      }
+    }, [selectedRoute]),
+  );
+
   const handleClear = () => {
     setStartPoint(null);
-    setStartStreet('Не выбрана');
+    setStartStreet("Не выбрана");
     setDestPoint(null);
-    setDestStreet('Не выбрана');
+    setDestStreet("Не выбрана");
     setRouteCoords([]);
-    setDistanceKm(null);
-    setDurationMin(null);
-    setActiveMode('start');
+    setDistance(0);
+    setDuration(0);
+    setActiveMode("start");
   };
 
   const routeGeoJSON =
     routeCoords.length > 1
       ? {
-          type: 'Feature' as const,
+          type: "Feature" as const,
           geometry: {
-            type: 'LineString' as const,
+            type: "LineString" as const,
             coordinates: routeCoords,
           },
           properties: {},
@@ -146,8 +251,10 @@ export default function MotoMap() {
   return (
     <View className="flex-1 bg-background">
       <Map style={{ flex: 1 }} onPress={handleMapPress} mapStyle={MAP_STYLE}>
-        <Camera initialViewState={{ center: DEFAULT_CENTER, zoom: 11 }} />
-
+        <Camera
+          ref={cameraRef}
+          initialViewState={{ center: DEFAULT_CENTER, zoom: 11 }}
+        />
         {startPoint && (
           <Marker id="start" lngLat={startPoint}>
             <View className="size-6 items-center justify-center rounded-full border-2 border-card bg-primary">
@@ -169,24 +276,24 @@ export default function MotoMap() {
             <Layer
               id="routeLine"
               type="line"
-              paint={{ 'line-color': '#ea7a53', 'line-width': 5 }}
-              layout={{ 'line-cap': 'round', 'line-join': 'round' }}
+              paint={{ "line-color": "#ea7a53", "line-width": 5 }}
+              layout={{ "line-cap": "round", "line-join": "round" }}
             />
           </GeoJSONSource>
         )}
       </Map>
 
       <SafeAreaView
-        edges={['bottom']}
+        edges={["bottom"]}
         className="mb-16 rounded-t-3xl border-t border-border bg-background p-5"
       >
         <View className="mb-3 flex-row gap-2">
           <Pressable
-            onPress={() => setActiveMode('start')}
+            onPress={() => setActiveMode("start")}
             className={`flex-1 rounded-xl border p-2.5 ${
-              activeMode === 'start'
-                ? 'border-primary bg-primary/10'
-                : 'border-border bg-card'
+              activeMode === "start"
+                ? "border-primary bg-primary/10"
+                : "border-border bg-card"
             }`}
           >
             <Text className="font-sans-medium text-[11px] text-muted-foreground">
@@ -201,11 +308,11 @@ export default function MotoMap() {
           </Pressable>
 
           <Pressable
-            onPress={() => setActiveMode('end')}
+            onPress={() => setActiveMode("end")}
             className={`flex-1 rounded-xl border p-2.5 ${
-              activeMode === 'end'
-                ? 'border-accent bg-accent/10'
-                : 'border-border bg-card'
+              activeMode === "end"
+                ? "border-accent bg-accent/10"
+                : "border-border bg-card"
             }`}
           >
             <Text className="font-sans-medium text-[11px] text-muted-foreground">
@@ -222,30 +329,87 @@ export default function MotoMap() {
 
         <View className="flex-row items-center justify-between">
           <View className="flex-1">
-            {distanceKm && durationMin !== null ? (
+            {distance && duration !== null ? (
               <Text className="font-sans-semibold text-sm text-accent">
-                {distanceKm} км • ~{durationMin} мин в пути
+                {Math.floor(distance / 1000)} км • ~{Math.floor(duration / 60)}{" "}
+                мин в пути
               </Text>
             ) : (
               <Text className="font-sans-medium text-xs text-muted-foreground">
-                {activeMode === 'start'
-                  ? 'Нажмите на карту, чтобы указать точку А'
-                  : 'Нажмите на карту, чтобы указать точку Б'}
+                {activeMode === "start"
+                  ? "Нажмите на карту, чтобы указать точку А"
+                  : "Нажмите на карту, чтобы указать точку Б"}
               </Text>
             )}
           </View>
           {loading && <ActivityIndicator color="#ea7a53" />}
         </View>
 
-        {(startPoint || destPoint) && (
-          <Pressable
-            onPress={handleClear}
-            className="mt-3 items-center rounded-2xl bg-accent py-3 active:opacity-75"
-          >
-            <Text className="font-sans-bold text-sm text-primary">
-              Очистить маршрут
-            </Text>
-          </Pressable>
+        {isRiding ? (
+          <View className="mt-3">
+            <View className="mb-3 flex-row justify-around rounded-2xl bg-primary py-3">
+              <View className="items-center">
+                <Text className="font-sans-bold text-lg text-white">
+                  {formatTime(seconds)}
+                </Text>
+                <Text className="text-xs text-white/70">Время</Text>
+              </View>
+              <View className="items-center">
+                <Text className="font-sans-bold text-lg text-accent">
+                  {formatDistance(distance)}
+                </Text>
+                <Text className="text-xs text-white/70">Маршрут</Text>
+              </View>
+            </View>
+
+            <Pressable
+              onPress={() => {
+                setIsRiding(false);
+                setSeconds(0);
+                handleFinishRide();
+              }}
+              className="items-center rounded-2xl bg-destructive py-3 active:opacity-75"
+            >
+              <Text className="font-sans-bold text-sm text-white">
+                Завершить заезд
+              </Text>
+            </Pressable>
+          </View>
+        ) : (
+          (startPoint || destPoint) && (
+            <View className="mt-3 flex-row gap-2">
+              <Pressable
+                onPress={handleClear}
+                className="items-center justify-center rounded-2xl border border-border bg-card px-4 py-3 active:opacity-75"
+              >
+                <Text className="font-sans-bold text-xs text-primary">
+                  Сбросить
+                </Text>
+              </Pressable>
+
+              {routeCoords.length > 1 && (
+                <>
+                  <Pressable
+                    onPress={handleSaveToRoutes}
+                    className="flex-1 items-center justify-center rounded-2xl bg-subscription py-3 active:opacity-75"
+                  >
+                    <Text className="font-sans-bold text-xs text-primary">
+                      Сохранить
+                    </Text>
+                  </Pressable>
+
+                  <Pressable
+                    onPress={() => setIsRiding(true)}
+                    className="flex-1 items-center justify-center rounded-2xl bg-accent py-3 active:opacity-75"
+                  >
+                    <Text className="font-sans-bold text-xs text-primary">
+                      Поехали
+                    </Text>
+                  </Pressable>
+                </>
+              )}
+            </View>
+          )
         )}
       </SafeAreaView>
     </View>
