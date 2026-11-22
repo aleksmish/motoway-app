@@ -113,8 +113,7 @@ export default function AddMotorcycleModal({
                 <Pressable className="modal-close" onPress={handleClose}>
                   <Text className="modal-close-text">✕</Text>
                 </Pressable>
-                <Text className="modal-title">Добавить транспорт
-                </Text>
+                <Text className="modal-title">Добавить транспорт</Text>
               </View>
               <ScrollView
                 className="p-5"
@@ -132,7 +131,9 @@ export default function AddMotorcycleModal({
                         source={photoCamera}
                         className="modal-add-photo-image"
                       />
-                      <Text className="modal-add-photo-text">Добавить фотографию</Text>
+                      <Text className="modal-add-photo-text">
+                        Добавить фотографию
+                      </Text>
                     </View>
                   </Pressable>
                 ) : (

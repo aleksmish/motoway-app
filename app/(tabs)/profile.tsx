@@ -1,3 +1,4 @@
+import AddVehiclePlus from "@/components/AddVehiclePlus";
 import VehicleCard from "@/components/VehicleCard";
 import VehiclesEmpty from "@/components/VehiclesEmpty";
 import { profileSettingsIcon } from "@/constants/data";
@@ -68,7 +69,13 @@ const Profile = () => {
           </View>
         </View>
         <View className="profile-garage">
-          <Text className="profile-garage__title">Мой гараж</Text>
+          <View className="mb-2 flex-row items-center justify-between">
+            <Text className="profile-garage__title mb-0">Мой гараж</Text>
+
+            {vehicles.length > 0 && (
+              <AddVehiclePlus onAddVehicle={handleAddVehicle} />
+            )}
+          </View>
           <View className="profile-garage__vehicles">
             <FlatList
               data={vehicles}

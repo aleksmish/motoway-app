@@ -92,6 +92,14 @@
   @apply size-12;
 }
 
+.profile-garage__add-container {
+  @apply size-8 items-center justify-center active:opacity-50;
+}
+
+.profile-garage__add {
+  @apply size-6;
+}
+
 .profile-settings-container {
   @apply active:opacity-50;
 }
