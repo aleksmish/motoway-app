@@ -120,7 +120,11 @@ export default function MotoMap() {
       if (trip && trip.length > 0) {
         setRouteCoords(trip);
         setDistance(Math.floor(firstRoute.distance));
-        setDuration(Math.floor(firstRoute.duration * 1.45));
+        setDuration(
+          Math.floor(
+            selectedRoute ? firstRoute.duration : firstRoute.duration * 1.45,
+          ),
+        );
       } else {
         setRouteCoords([from, to]);
         setDistance(0);
@@ -208,11 +212,11 @@ export default function MotoMap() {
       setDestStreet(parts.at(1)?.trim() || selectedRoute.title);
       setRouteCoords(selectedRoute.coords);
       setDistance(selectedRoute.distance);
-      setDuration(0);
+      setDuration(selectedRoute.duration);
 
       setTimeout(() => {
         cameraRef?.current?.flyTo({
-          center: first,
+          center: mid,
           zoom: 9,
           duration: 600,
         });
