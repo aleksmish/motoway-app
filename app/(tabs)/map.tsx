@@ -184,7 +184,6 @@ export default function MotoMap() {
         region: "Мой маршрут",
         distance: Number(distance) || 0,
         duration: Number(seconds),
-        curves: Math.max(12, Math.round(routeCoords.length / 4)),
         difficulty: Number(distance) > 90000 ? "Серпантин" : "Средний",
         isFavorite: true,
         isCompleted: false,
