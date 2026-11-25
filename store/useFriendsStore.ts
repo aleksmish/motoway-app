@@ -28,7 +28,8 @@ const INITIAL_FRIENDS: Friend[] = [
     seasonDistance: "4 250 км",
     ridesCount: 28,
     isRiding: true,
-    avatar: "https://pravatar.cc",
+    avatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMxP62uqnwM3zFLSibHXK6_3-I1K-CBlYyXKte6rbK2HAjd5aeJO3Op50T&s=10",
   },
   {
     id: "2",
@@ -38,7 +39,8 @@ const INITIAL_FRIENDS: Friend[] = [
     seasonDistance: "3 120 км",
     ridesCount: 19,
     isRiding: false,
-    avatar: "https://pravatar.cc",
+    avatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfUOzJapuI9JKgapZB4DLUU1FF9q08Y8eT6KbuysUzOHKIsWja9dz-tr0&s=10",
   },
   {
     id: "3",
@@ -48,7 +50,8 @@ const INITIAL_FRIENDS: Friend[] = [
     seasonDistance: "8 940 км",
     ridesCount: 54,
     isRiding: true,
-    avatar: "https://pravatar.cc",
+    avatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFW0-D9c0znsafb8S8R9kXdw5PtcKyV_Y4j5fs6mGmzB03zoGO3ZOG0ac&s=10",
   },
 ];
 
@@ -61,7 +64,8 @@ const INITIAL_REQUESTS: Friend[] = [
     seasonDistance: "1 800 км",
     ridesCount: 11,
     isRiding: false,
-    avatar: "https://pravatar.cc",
+    avatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhv7681GQA5VKJvTiexMhpctCNRVviCiVNUsd30kMECYsB_PXtS38QCZMz&s=10",
   },
 ];
 

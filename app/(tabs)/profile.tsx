@@ -3,6 +3,8 @@ import VehicleCard from "@/components/VehicleCard";
 import VehiclesEmpty from "@/components/VehiclesEmpty";
 import { profileSettingsIcon } from "@/constants/data";
 import images from "@/constants/images";
+import { pluralize } from "@/constants/utils";
+import { useFriendsStore } from "@/store/useFriendsStore";
 import { useGarageStore } from "@/store/useGarageStore";
 import { getCompletedStats, useRouteStore } from "@/store/useRouteStore";
 import { styled } from "nativewind";
@@ -22,6 +24,8 @@ const SafeAreaView = styled(RNSafeAreView);
 const Profile = () => {
   const { vehicles, addVehicle } = useGarageStore();
   const { routes } = useRouteStore();
+  const { friends } = useFriendsStore();
+
   const handleAddVehicle = (vehicle: Vehicle) => {
     addVehicle(vehicle);
   };
@@ -42,7 +46,8 @@ const Profile = () => {
               <Text>Москва, Россия</Text>
               <View>
                 <Text>
-                  <Text>0</Text> Друзей
+                  <Text>{friends.length}</Text>{" "}
+                  {pluralize(friends.length, ["Друг", "Друга", "Друзей"])}
                 </Text>
               </View>
             </View>

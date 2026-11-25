@@ -40,6 +40,7 @@ declare global {
     visible: boolean;
     onClose: () => void;
     onAddVehicle: (vehicle: Vehicle) => void;
+    initialVehicle?: Vehicle | null;
   }
 
   interface VehiclesEmptyProps {
@@ -76,4 +77,5 @@ declare global {
   }
 }
 
-export {};
+export { };
+

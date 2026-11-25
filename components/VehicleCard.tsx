@@ -1,10 +1,19 @@
-import React from "react";
-import { Image, Text, View } from "react-native";
+import { useGarageStore } from "@/store/useGarageStore";
+import React, { useState } from "react";
+import { Image, Pressable, Text, View } from "react-native";
 import baseMotoImage from "../assets/images/base-moto.png";
+import AddMotorcycleModal from "./AddMotorcycleModal";
 
-const VehicleCard = ({ id, image, make, model, yearBuilt }: Vehicle) => {
+const VehicleCard = (vehicle: Vehicle) => {
+  const { id, image, make, model, yearBuilt } = vehicle;
+  const { updateVehicle } = useGarageStore();
+  const [isModalVisible, setIsModalVisible] = useState(false);
   return (
-    <View className="profile-garage__vehicle" key={id}>
+    <Pressable
+      className="profile-garage__vehicle"
+      key={id}
+      onPress={() => setIsModalVisible(true)}
+    >
       <View className="profile-garage__vehicle-image-container">
         <Image
           resizeMode="contain"
@@ -18,7 +27,13 @@ const VehicleCard = ({ id, image, make, model, yearBuilt }: Vehicle) => {
         </Text>
         <Text>{yearBuilt}</Text>
       </View>
-    </View>
+      <AddMotorcycleModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onAddVehicle={updateVehicle}
+        initialVehicle={vehicle}
+      />
+    </Pressable>
   );
 };
 

@@ -1,7 +1,7 @@
 import { photoCamera } from "@/constants/data";
 import * as ImagePicker from "expo-image-picker";
 import { styled } from "nativewind";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   Keyboard,
@@ -17,13 +17,14 @@ import {
 } from "react-native";
 import { SafeAreaView as RNSafeAreView } from "react-native-safe-area-context";
 
+const SafeAreaView = styled(RNSafeAreView);
+
 export default function AddMotorcycleModal({
   visible,
   onClose,
   onAddVehicle,
+  initialVehicle,
 }: AddMotorcycleModalProps) {
-  const SafeAreaView = styled(RNSafeAreView);
-
   const [selectedImage, setSelectedImage] = useState("");
   const [name, setName] = useState("");
   const [make, setMake] = useState("");
@@ -32,17 +33,39 @@ export default function AddMotorcycleModal({
   const [yearBuilt, setYearBuilt] = useState("");
   const [color, setColor] = useState("");
 
+  useEffect(() => {
+    if (visible && initialVehicle) {
+      setName(initialVehicle.name || "");
+      setMake(initialVehicle.make || "");
+      setModel(initialVehicle.model || "");
+      setHorsepower(String(initialVehicle.horsepower || ""));
+      setYearBuilt(String(initialVehicle.yearBuilt || ""));
+      setColor(initialVehicle.color || "");
+      setSelectedImage(initialVehicle.image || "");
+    } else {
+      resetForm();
+    }
+  }, [visible, initialVehicle]);
+
   const handleClose = () => {
     resetForm();
     onClose();
   };
 
+  const isValidInteger = (value: string | number) => {
+    const str = String(value).trim();
+    if (str === "") return false;
+
+    const num = Number(str);
+    return Number.isInteger(num);
+  };
+
   const isValidForm = () => {
-    if (!Number.isInteger(horsepower)) {
+    if (!isValidInteger(horsepower)) {
       alert("Horsepower should be an integer");
       return false;
     }
-    if (!Number.isInteger(yearBuilt)) {
+    if (!isValidInteger(yearBuilt)) {
       alert("Year built should be an integer");
       return false;
     }
@@ -60,10 +83,10 @@ export default function AddMotorcycleModal({
   };
 
   const handleSubmit = () => {
-    if (!isValidForm) return;
+    if (!isValidForm()) return;
 
     const vehicle: Vehicle = {
-      id: `${Date.now()}`,
+      id: initialVehicle ? initialVehicle.id : `${Date.now()}`,
       name: name.trim(),
       make: make.trim(),
       model: model.trim(),
@@ -113,7 +136,11 @@ export default function AddMotorcycleModal({
                 <Pressable className="modal-close" onPress={handleClose}>
                   <Text className="modal-close-text">✕</Text>
                 </Pressable>
-                <Text className="modal-title">Добавить транспорт</Text>
+                <Text className="modal-title">
+                  {initialVehicle
+                    ? "Редактировать транспорт"
+                    : "Добавить транспорт"}
+                </Text>
               </View>
               <ScrollView
                 className="p-5"
@@ -137,13 +164,16 @@ export default function AddMotorcycleModal({
                     </View>
                   </Pressable>
                 ) : (
-                  <View className="modal-image-container">
+                  <Pressable
+                    onPress={pickImageAsync}
+                    className="modal-image-container"
+                  >
                     <Image
                       source={{ uri: selectedImage }}
                       resizeMode="contain"
                       className="modal-image"
                     />
-                  </View>
+                  </Pressable>
                 )}
                 <View className="auth-field">
                   <TextInput
@@ -205,7 +235,9 @@ export default function AddMotorcycleModal({
                   className="auth-button"
                   onPress={() => handleSubmit()}
                 >
-                  <Text className="auth-button-text">Добавить транспорт</Text>
+                  <Text className="auth-button-text">
+                    {initialVehicle ? "Сохранить" : "Добавить транспорт"}
+                  </Text>
                 </Pressable>
               </ScrollView>
             </Pressable>

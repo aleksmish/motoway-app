@@ -1,3 +1,4 @@
+import { useFriendsStore } from "@/store/useFriendsStore";
 import { useRouter } from "expo-router";
 import { styled } from "nativewind";
 import React, { useState } from "react";
@@ -24,62 +25,14 @@ export interface Friend {
   avatar: string;
 }
 
-export const MOCK_FRIENDS: Friend[] = [
-  {
-    id: "1",
-    name: "Дмитрий Соколов",
-    city: "Москва, Россия",
-    bike: "Kawasaki Ninja 650",
-    seasonDistance: "4 250 км",
-    ridesCount: 28,
-    isRiding: true,
-    avatar: "https://pravatar.cc",
-  },
-  {
-    id: "2",
-    name: "Елена Морозова",
-    city: "Санкт-Петербург",
-    bike: "Yamaha MT-07",
-    seasonDistance: "3 120 км",
-    ridesCount: 19,
-    isRiding: false,
-    avatar: "https://pravatar.cc",
-  },
-  {
-    id: "3",
-    name: "Артём Волков",
-    city: "Москва, Россия",
-    bike: "BMW R 1250 GS",
-    seasonDistance: "8 940 км",
-    ridesCount: 54,
-    isRiding: true,
-    avatar: "https://pravatar.cc",
-  },
-];
-
-const MOCK_REQUESTS: Friend[] = [
-  {
-    id: "4",
-    name: "Максим Ковалёв",
-    city: "Казань, Россия",
-    bike: "Honda CB650R",
-    seasonDistance: "1 800 км",
-    ridesCount: 11,
-    isRiding: false,
-    avatar: "https://pravatar.cc",
-  },
-];
-
 const Friends = () => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"friends" | "requests">("friends");
   const [searchQuery, setSearchQuery] = useState("");
-  const [friends, setFriends] = useState<Friend[]>(MOCK_FRIENDS);
-  const [requests, setRequests] = useState<Friend[]>(MOCK_REQUESTS);
+  const { friends, requests, acceptRequest } = useFriendsStore();
 
   const handleAcceptRequest = (user: Friend) => {
-    setRequests((prev) => prev.filter((item) => item.id !== user.id));
-    setFriends((prev) => [user, ...prev]);
+    acceptRequest(user.id);
   };
 
   const handleInviteToRide = (friend: Friend) => {
@@ -92,7 +45,7 @@ const Friends = () => {
   const currentList = (activeTab === "friends" ? friends : requests).filter(
     (item) =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.bike.toLowerCase().includes(searchQuery.toLowerCase())
+      item.bike.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const renderFriendCard = ({ item }: { item: Friend }) => (

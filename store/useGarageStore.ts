@@ -18,6 +18,7 @@ interface GarageState {
   totalDurationMin: number;
   addVehicle: (vehicle: Vehicle) => void;
   recordRideStats: (distanceKm: number, durationMin: number) => void;
+  updateVehicle: (updatedVehicle: Vehicle) => void;
 }
 
 const DEFAULT_VEHICLES: Vehicle[] = [
@@ -50,5 +51,12 @@ export const useGarageStore = create<GarageState>()((set) => ({
       totalRides: state.totalRides + 1,
       totalDistanceKm: Number((state.totalDistanceKm + distanceKm).toFixed(1)),
       totalDurationMin: state.totalDurationMin + durationMin,
+    })),
+
+  updateVehicle: (updatedVehicle: Vehicle) =>
+    set((state) => ({
+      vehicles: state.vehicles.map((v) =>
+        v.id === updatedVehicle.id ? updatedVehicle : v,
+      ),
     })),
 }));
