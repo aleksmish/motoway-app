@@ -40,6 +40,7 @@ declare global {
     visible: boolean;
     onClose: () => void;
     onAddVehicle: (vehicle: Vehicle) => void;
+    onDeleteVehicle?: (id: string) => void;
     initialVehicle?: Vehicle | null;
   }
 

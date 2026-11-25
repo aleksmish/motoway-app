@@ -16,9 +16,12 @@ interface GarageState {
   totalRides: number;
   totalDistanceKm: number;
   totalDurationMin: number;
+  activeVehicleId: string | number | null;
   addVehicle: (vehicle: Vehicle) => void;
   recordRideStats: (distanceKm: number, durationMin: number) => void;
   updateVehicle: (updatedVehicle: Vehicle) => void;
+  setActiveVehicleId: (id: string | number) => void;
+  deleteVehicle: (id: string) => void;
 }
 
 const DEFAULT_VEHICLES: Vehicle[] = [
@@ -40,6 +43,7 @@ export const useGarageStore = create<GarageState>()((set) => ({
   totalRides: 0,
   totalDistanceKm: 0,
   totalDurationMin: 0,
+  activeVehicleId: null,
 
   addVehicle: (vehicle) =>
     set((state) => ({
@@ -59,4 +63,19 @@ export const useGarageStore = create<GarageState>()((set) => ({
         v.id === updatedVehicle.id ? updatedVehicle : v,
       ),
     })),
+
+  setActiveVehicleId: (id) => set({ activeVehicleId: id }),
+  deleteVehicle: (id) =>
+    set((state) => {
+      const remaining = state.vehicles.filter((v) => v.id !== id);
+      const nextActiveId =
+        String(state.activeVehicleId) === String(id)
+          ? (remaining[0]?.id ?? null)
+          : state.activeVehicleId;
+
+      return {
+        vehicles: remaining,
+        activeVehicleId: nextActiveId,
+      };
+    }),
 }));

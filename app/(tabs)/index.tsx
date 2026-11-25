@@ -1,5 +1,7 @@
+import baseMotoImage from "@/assets/images/base-moto.png";
 import images from "@/constants/images";
 import "@/global.css";
+import { useGarageStore } from "@/store/useGarageStore";
 import { useRouter } from "expo-router";
 import { styled } from "nativewind";
 import React from "react";
@@ -33,6 +35,10 @@ const RECENT_ACTIVITY = [
 
 export default function App() {
   const router = useRouter();
+  const { vehicles, activeVehicleId } = useGarageStore();
+  const activeVehicle =
+    vehicles.find((v) => String(v.id) === String(activeVehicleId)) ??
+    vehicles[0];
 
   return (
     <SafeAreaView className="flex-1 bg-background p-5">
@@ -61,7 +67,9 @@ export default function App() {
           </Pressable>
 
           <View className="items-end rounded-2xl border border-border bg-card px-3 py-2">
-            <Text className="font-sans-bold text-sm text-primary">+18°C ☀️</Text>
+            <Text className="font-sans-bold text-sm text-primary">
+              +18°C ☀️
+            </Text>
             <Text className="font-sans-medium text-xs text-success">
               Сухой асфальт
             </Text>
@@ -119,31 +127,45 @@ export default function App() {
             </Pressable>
           </View>
 
-          <Pressable
-            onPress={() => router.push("/(tabs)/profile")}
-            className="flex-row items-center justify-between rounded-2xl border border-border bg-card p-3.5 active:opacity-80"
-          >
-            <View className="flex-1 flex-row items-center gap-3">
-              <Image
-                source={{
-                  uri: "https://kawasaki.com",
-                }}
-                className="h-16 w-20 rounded-xl bg-muted"
-                resizeMode="cover"
-              />
-              <View className="flex-1">
-                <Text
-                  className="font-sans-bold text-base text-primary"
-                  numberOfLines={1}
-                >
-                  Kawasaki Ninja ZX-10R
-                </Text>
-                <Text className="mt-0.5 font-sans-medium text-xs text-muted-foreground">
-                  2025 • 203 л.с. • Пробег: 0 км
-                </Text>
+          {activeVehicle ? (
+            <Pressable
+              onPress={() => router.push("/(tabs)/profile")}
+              className="flex-row items-center justify-between rounded-2xl border border-border bg-card p-3.5 active:opacity-80"
+            >
+              <View className="flex-1 flex-row items-center gap-3">
+                <Image
+                  source={
+                    activeVehicle.image
+                      ? { uri: activeVehicle.image }
+                      : baseMotoImage
+                  }
+                  className="h-16 w-20 rounded-xl bg-muted"
+                  resizeMode="cover"
+                />
+                <View className="flex-1">
+                  <Text
+                    className="font-sans-bold text-base text-primary"
+                    numberOfLines={1}
+                  >
+                    {activeVehicle.name}
+                  </Text>
+                  <Text className="mt-0.5 font-sans-medium text-xs text-muted-foreground">
+                    {activeVehicle.yearBuilt} • {activeVehicle.horsepower} л.с.
+                    • {activeVehicle.color}
+                  </Text>
+                </View>
               </View>
-            </View>
-          </Pressable>
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => router.push("/(tabs)/profile")}
+              className="items-center rounded-2xl border border-dashed border-border bg-card p-4 active:opacity-75"
+            >
+              <Text className="font-sans-semibold text-sm text-muted-foreground">
+                + Добавить мотоцикл в гараж
+              </Text>
+            </Pressable>
+          )}
         </View>
 
         {/* Лента поездок друзей */}

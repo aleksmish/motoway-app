@@ -3,6 +3,7 @@ import * as ImagePicker from "expo-image-picker";
 import { styled } from "nativewind";
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Image,
   Keyboard,
   KeyboardAvoidingView,
@@ -24,6 +25,7 @@ export default function AddMotorcycleModal({
   onClose,
   onAddVehicle,
   initialVehicle,
+  onDeleteVehicle,
 }: AddMotorcycleModalProps) {
   const [selectedImage, setSelectedImage] = useState("");
   const [name, setName] = useState("");
@@ -113,6 +115,26 @@ export default function AddMotorcycleModal({
     } else {
       alert("You did not select any image");
     }
+  };
+
+  const handleDelete = () => {
+    if (!initialVehicle || !onDeleteVehicle) return;
+
+    Alert.alert(
+      "Удалить транспорт",
+      `Удалить ${initialVehicle.make} ${initialVehicle.model} из гаража?`,
+      [
+        { text: "Отмена", style: "cancel" },
+        {
+          text: "Удалить",
+          style: "destructive",
+          onPress: () => {
+            onDeleteVehicle(initialVehicle.id);
+            handleClose();
+          },
+        },
+      ],
+    );
   };
 
   return (
@@ -239,6 +261,16 @@ export default function AddMotorcycleModal({
                     {initialVehicle ? "Сохранить" : "Добавить транспорт"}
                   </Text>
                 </Pressable>
+                {initialVehicle && onDeleteVehicle && (
+                  <Pressable
+                    className="auth-delete-button"
+                    onPress={handleDelete}
+                  >
+                    <Text className="auth-delete-button-text">
+                      Удалить транспорт
+                    </Text>
+                  </Pressable>
+                )}
               </ScrollView>
             </Pressable>
           </TouchableWithoutFeedback>

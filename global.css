@@ -384,6 +384,14 @@
   @apply text-sm font-sans-medium text-muted-foreground;
 }
 
+.auth-delete-button {
+  @apply mb-4 items-center rounded-2xl border border-destructive/30 bg-destructive/10 py-4 active:opacity-70;
+}
+
+.auth-delete-button-text {
+  @apply text-base font-sans-bold text-destructive;
+}
+
 .auth-button {
   @apply mb-2 mt-1 items-center rounded-2xl bg-accent py-4 active:opacity-70;
 }

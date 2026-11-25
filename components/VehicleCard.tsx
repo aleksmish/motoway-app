@@ -6,8 +6,9 @@ import AddMotorcycleModal from "./AddMotorcycleModal";
 
 const VehicleCard = (vehicle: Vehicle) => {
   const { id, image, make, model, yearBuilt } = vehicle;
-  const { updateVehicle } = useGarageStore();
+  const { updateVehicle, deleteVehicle } = useGarageStore();
   const [isModalVisible, setIsModalVisible] = useState(false);
+
   return (
     <Pressable
       className="profile-garage__vehicle"
@@ -31,6 +32,7 @@ const VehicleCard = (vehicle: Vehicle) => {
         visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         onAddVehicle={updateVehicle}
+        onDeleteVehicle={deleteVehicle}
         initialVehicle={vehicle}
       />
     </Pressable>
