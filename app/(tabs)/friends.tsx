@@ -1,4 +1,4 @@
-import { useFriendsStore } from "@/store/useFriendsStore";
+import { Friend, useFriendsStore } from "@/store/useFriendsStore";
 import { useRouter } from "expo-router";
 import { styled } from "nativewind";
 import React, { useState } from "react";
@@ -14,43 +14,45 @@ import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
-export interface Friend {
-  id: string;
-  name: string;
-  city: string;
-  bike: string;
-  seasonDistance: string;
-  ridesCount: number;
-  isRiding: boolean;
-  avatar: string;
-}
+type TabType = "friends" | "requests" | "discover";
 
 const Friends = () => {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"friends" | "requests">("friends");
+  const [activeTab, setActiveTab] = useState<TabType>("friends");
   const [searchQuery, setSearchQuery] = useState("");
-  const { friends, requests, acceptRequest } = useFriendsStore();
+  const {
+    friends,
+    requests,
+    discoverRiders,
+    acceptRequest,
+    addFriendFromDiscover,
+  } = useFriendsStore();
 
   const handleAcceptRequest = (user: Friend) => {
     acceptRequest(user.id);
   };
 
-  const handleInviteToRide = (friend: Friend) => {
-    router.push({
-      pathname: "/(tabs)/map",
-      params: { inviteFriendId: friend.id, friendName: friend.name },
-    });
+  const handleAddFriend = (user: Friend) => {
+    addFriendFromDiscover(user.id);
   };
 
-  const currentList = (activeTab === "friends" ? friends : requests).filter(
+  const sourceList =
+    activeTab === "friends"
+      ? friends
+      : activeTab === "requests"
+        ? requests
+        : discoverRiders;
+
+  const currentList = sourceList.filter(
     (item) =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.bike.toLowerCase().includes(searchQuery.toLowerCase()),
+      item.bike.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.city.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const renderFriendCard = ({ item }: { item: Friend }) => (
     <Pressable
-      onPress={() => router.push(`/friend/${item.id}` as any)}
+      onPress={() => router.push(`/rider/${item.id}` as any)}
       className="mb-3 flex-row items-center justify-between rounded-2xl border border-border bg-card p-4 active:opacity-80"
     >
       <View className="flex-1 flex-row items-center">
@@ -88,19 +90,13 @@ const Friends = () => {
         </View>
       </View>
 
-      {activeTab === "friends" ? (
-        <Pressable
-          onPress={(e) => {
-            e.stopPropagation();
-            handleInviteToRide(item);
-          }}
-          className="ml-2 rounded-xl bg-accent px-3.5 py-2 active:opacity-70"
-        >
-          <Text className="font-sans-bold text-xs text-primary">
-            На маршрут
-          </Text>
-        </Pressable>
-      ) : (
+      {activeTab === "friends" && (
+        <Text className="ml-2 font-sans-bold text-lg text-muted-foreground">
+          ›
+        </Text>
+      )}
+
+      {activeTab === "requests" && (
         <Pressable
           onPress={(e) => {
             e.stopPropagation();
@@ -111,6 +107,20 @@ const Friends = () => {
           <Text className="font-sans-bold text-xs text-primary">Принять</Text>
         </Pressable>
       )}
+
+      {activeTab === "discover" && (
+        <Pressable
+          onPress={(e) => {
+            e.stopPropagation();
+            handleAddFriend(item);
+          }}
+          className="ml-2 rounded-xl bg-primary px-3.5 py-2 active:opacity-70"
+        >
+          <Text className="font-sans-bold text-xs text-background">
+            + Добавить
+          </Text>
+        </Pressable>
+      )}
     </Pressable>
   );
 
@@ -119,9 +129,9 @@ const Friends = () => {
       {/* Заголовок */}
       <View className="mb-4 flex-row items-center justify-between">
         <View>
-          <Text className="font-sans-bold text-2xl text-primary">Друзья</Text>
+          <Text className="font-sans-bold text-2xl text-primary">Райдеры</Text>
           <Text className="mt-0.5 font-sans-medium text-xs text-muted-foreground">
-            {friends.filter((f) => f.isRiding).length} сейчас в пути
+            {friends.filter((f) => f.isRiding).length} друзей сейчас в пути
           </Text>
         </View>
       </View>
@@ -131,7 +141,7 @@ const Friends = () => {
         <TextInput
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholder="Имя райдера или модель мотоцикла..."
+          placeholder="Имя, город или модель мотоцикла..."
           placeholderTextColor="rgba(0, 0, 0, 0.45)"
           className="flex-1 font-sans-medium text-sm text-primary"
         />
@@ -144,7 +154,7 @@ const Friends = () => {
         )}
       </View>
 
-      {/* Вкладки */}
+      {/* Вкладки: Друзья / Заявки / Поиск райдеров */}
       <View className="mb-4 flex-row rounded-xl border border-border bg-muted p-1">
         <Pressable
           onPress={() => setActiveTab("friends")}
@@ -159,7 +169,7 @@ const Friends = () => {
                 : "text-muted-foreground"
             }`}
           >
-            Мои друзья ({friends.length})
+            Друзья ({friends.length})
           </Text>
         </Pressable>
 
@@ -177,6 +187,23 @@ const Friends = () => {
             }`}
           >
             Заявки ({requests.length})
+          </Text>
+        </Pressable>
+
+        <Pressable
+          onPress={() => setActiveTab("discover")}
+          className={`flex-1 items-center rounded-lg py-2 ${
+            activeTab === "discover" ? "bg-primary" : "bg-transparent"
+          }`}
+        >
+          <Text
+            className={`font-sans-semibold text-xs ${
+              activeTab === "discover"
+                ? "text-background"
+                : "text-muted-foreground"
+            }`}
+          >
+            Найти ({discoverRiders.length})
           </Text>
         </Pressable>
       </View>

@@ -7,7 +7,6 @@ export interface Route {
   region: string;
   distance: number;
   duration: number;
-  curves: number;
   difficulty: "Лёгкий" | "Средний" | "Серпантин";
   isFavorite: boolean;
   isCompleted: boolean;
@@ -32,7 +31,6 @@ const DEFAULT_ROUTES: Route[] = [
     region: "Московская область",
     distance: 88000,
     duration: 5040,
-    curves: 74,
     difficulty: "Средний",
     isFavorite: true,
     isCompleted: true,
@@ -49,7 +47,6 @@ const DEFAULT_ROUTES: Route[] = [
     region: "Север Подмосковья",
     distance: 114000,
     duration: 6480,
-    curves: 118,
     difficulty: "Серпантин",
     isFavorite: true,
     isCompleted: false,
@@ -66,7 +63,6 @@ const DEFAULT_ROUTES: Route[] = [
     region: "Запад Подмосковья",
     distance: 62000,
     duration: 2940,
-    curves: 31,
     difficulty: "Лёгкий",
     isFavorite: false,
     isCompleted: true,
@@ -83,7 +79,6 @@ const DEFAULT_ROUTES: Route[] = [
     region: "Калужская область",
     distance: 156000,
     duration: 9000,
-    curves: 164,
     difficulty: "Серпантин",
     isFavorite: false,
     isCompleted: false,

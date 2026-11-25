@@ -14,8 +14,11 @@ export interface Friend {
 interface FriendsState {
   friends: Friend[];
   requests: Friend[];
+  discoverRiders: Friend[];
   invitedCompanion: Friend | null;
   acceptRequest: (id: string) => void;
+  addFriendFromDiscover: (id: string) => void;
+  removeFriend: (id: string) => void;
   setInvitedCompanion: (friend: Friend | null) => void;
 }
 
@@ -69,9 +72,34 @@ const INITIAL_REQUESTS: Friend[] = [
   },
 ];
 
+const INITIAL_DISCOVER: Friend[] = [
+  {
+    id: "5",
+    name: "Кирилл Лебедев",
+    city: "Москва, Россия",
+    bike: "KTM 890 Duke R",
+    seasonDistance: "5 410 км",
+    ridesCount: 34,
+    isRiding: true,
+    avatar: "https://avavatar.ru/image/31236/download_image",
+  },
+  {
+    id: "6",
+    name: "Никита Громов",
+    city: "Химки, Россия",
+    bike: "Honda CBR650R",
+    seasonDistance: "2 760 км",
+    ridesCount: 16,
+    isRiding: false,
+    avatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhOuIgmggh8ubFIMMXGODp_PVvvdierTenqF45E2WLxAWhDen5qQaFbXA&s=10",
+  },
+];
+
 export const useFriendsStore = create<FriendsState>()((set) => ({
   friends: INITIAL_FRIENDS,
   requests: INITIAL_REQUESTS,
+  discoverRiders: INITIAL_DISCOVER,
   invitedCompanion: null,
 
   acceptRequest: (id) =>
@@ -81,6 +109,26 @@ export const useFriendsStore = create<FriendsState>()((set) => ({
       return {
         requests: state.requests.filter((r) => r.id !== id),
         friends: [target, ...state.friends],
+      };
+    }),
+
+  addFriendFromDiscover: (id) =>
+    set((state) => {
+      const target = state.discoverRiders.find((r) => r.id === id);
+      if (!target) return state;
+      return {
+        discoverRiders: state.discoverRiders.filter((r) => r.id !== id),
+        friends: [target, ...state.friends],
+      };
+    }),
+
+  removeFriend: (id) =>
+    set((state) => {
+      const target = state.friends.find((f) => f.id === id);
+      if (!target) return state;
+      return {
+        friends: state.friends.filter((f) => f.id !== id),
+        discoverRiders: [target, ...state.discoverRiders],
       };
     }),
 

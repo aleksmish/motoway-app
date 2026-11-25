@@ -111,15 +111,6 @@ const Routes = () => {
             В пути
           </Text>
         </View>
-
-        <View>
-          <Text className="font-sans-bold text-sm text-accent">
-            {item.curves} виражей
-          </Text>
-          <Text className="font-sans-medium text-xs text-muted-foreground">
-            Извилистость
-          </Text>
-        </View>
       </View>
 
       <Pressable

@@ -19,17 +19,19 @@ const RECENT_ACTIVITY = [
     distance: "88 км",
     curves: 74,
     timeAgo: "2 часа назад",
-    avatar: "https://pravatar.cc",
+    avatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMxP62uqnwM3zFLSibHXK6_3-I1K-CBlYyXKte6rbK2HAjd5aeJO3Op50T&s=10",
   },
   {
-    id: "2",
+    id: "3",
     rider: "Артём Волков",
     bike: "BMW R 1250 GS",
-    route: "Дмитровские холмы и Яхрома",
+    route: "Дмитровские холмы — Яхрома",
     distance: "114 км",
     curves: 118,
     timeAgo: "Вчера",
-    avatar: "https://pravatar.cc",
+    avatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFW0-D9c0znsafb8S8R9kXdw5PtcKyV_Y4j5fs6mGmzB03zoGO3ZOG0ac&s=10",
   },
 ];
 
@@ -89,8 +91,8 @@ export default function App() {
             Записать новый маршрут
           </Text>
           <Text className="mt-1 font-sans-medium text-xs text-white/75">
-            Выбирай извилистые дороги, отслеживай виражи и делись треком с
-            друзьями.
+            Отслеживай дистанцию и время в пути, сохраняй любимые дороги и
+            делись треками с друзьями.
           </Text>
 
           <View className="mt-4 flex-row gap-2.5">
@@ -186,7 +188,10 @@ export default function App() {
               key={item.id}
               className="mb-3 rounded-2xl border border-border bg-card p-4"
             >
-              <View className="flex-row items-center justify-between">
+              <Pressable
+                onPress={() => router.push(`/rider/${item.id}` as any)}
+                className="flex-row items-center justify-between active:opacity-75"
+              >
                 <View className="flex-row items-center gap-2.5">
                   <Image
                     source={{ uri: item.avatar }}
@@ -201,14 +206,14 @@ export default function App() {
                     </Text>
                   </View>
                 </View>
-              </View>
+              </Pressable>
 
               <View className="mt-3 rounded-xl bg-muted p-3">
                 <Text className="font-sans-bold text-sm text-primary">
                   {item.route}
                 </Text>
                 <Text className="mt-1 font-sans-semibold text-xs text-accent">
-                  {item.distance} • {item.curves} виражей
+                  {item.distance}
                 </Text>
               </View>
             </View>
