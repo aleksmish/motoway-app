@@ -67,15 +67,6 @@ export default function App() {
               </Text>
             </View>
           </Pressable>
-
-          <View className="items-end rounded-2xl border border-border bg-card px-3 py-2">
-            <Text className="font-sans-bold text-sm text-primary">
-              +18°C ☀️
-            </Text>
-            <Text className="font-sans-medium text-xs text-success">
-              Сухой асфальт
-            </Text>
-          </View>
         </View>
 
         {/* Главный баннер быстрого старта поездки */}

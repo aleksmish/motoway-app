@@ -11,7 +11,7 @@ import {
 } from "@maplibre/maplibre-react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import { styled } from "nativewind";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Alert, Pressable, Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
@@ -25,6 +25,7 @@ const MAP_STYLE: StyleSpecification = {
       type: "raster",
       tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
       tileSize: 256,
+      maxzoom: 19,
     },
   },
   layers: [{ id: "osm-layer", type: "raster", source: "osm" }],
@@ -37,8 +38,7 @@ export default function MotoMap() {
 
   const addRoute = useRouteStore((store) => store.addRoute);
 
-  // Таймер во время поездки
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isRiding) return;
     const id = setInterval(() => setSeconds((s) => s + 1), 1000);
     return () => clearInterval(id);
@@ -56,7 +56,6 @@ export default function MotoMap() {
       region: "Мой маршрут",
       distance: Number(distance) || 0,
       duration: Number(duration) || 900,
-      curves: Math.max(12, Math.round(routeCoords.length / 4)),
       difficulty: Number(distance) > 90000 ? "Серпантин" : "Средний",
       isFavorite: true,
       isCompleted: false,
@@ -115,6 +114,39 @@ export default function MotoMap() {
       const routeRes = await fetch(routeUrl);
       const routeData = await routeRes.json();
       const firstRoute = routeData?.routes?.[0];
+
+      if (routeData?.code !== "Ok" || !firstRoute) {
+        Alert.alert(
+          "Маршрут по суше не найден",
+          "Не удалось найти дорогу рядом с точкой или построить маршрут по суше.",
+        );
+        setDestPoint(null);
+        setDestStreet("Нажмите на карту");
+        setRouteCoords([]);
+        setDistance(0);
+        setDuration(0);
+        return;
+      }
+
+      // const usesFerry = firstRoute?.legs?.some((leg: any) =>
+      //   leg.steps?.some(
+      //     (step: any) => step.mode === "ferry" || step.mode === "train",
+      //   ),
+      // );
+
+      // if (usesFerry) {
+      //   Alert.alert(
+      //     "Маршрут включает паром",
+      //     "Публичный сервер OSRM не может построить объезд по суше для этой точки.",
+      //   );
+      //   setDestPoint(null);
+      //   setDestStreet("Нажмите на карту");
+      //   setRouteCoords([]);
+      //   setDistance(0);
+      //   setDuration(0);
+      //   return;
+      // }
+
       const trip = firstRoute?.geometry?.coordinates;
 
       if (trip && trip.length > 0) {
@@ -257,6 +289,7 @@ export default function MotoMap() {
         <Camera
           ref={cameraRef}
           initialViewState={{ center: DEFAULT_CENTER, zoom: 11 }}
+          maxZoom={18}
         />
         {startPoint && (
           <Marker id="start" lngLat={startPoint}>
@@ -398,15 +431,6 @@ export default function MotoMap() {
                   >
                     <Text className="font-sans-bold text-xs text-primary">
                       Сохранить
-                    </Text>
-                  </Pressable>
-
-                  <Pressable
-                    onPress={() => setIsRiding(true)}
-                    className="flex-1 items-center justify-center rounded-2xl bg-accent py-3 active:opacity-75"
-                  >
-                    <Text className="font-sans-bold text-xs text-primary">
-                      Поехали
                     </Text>
                   </Pressable>
                 </>
