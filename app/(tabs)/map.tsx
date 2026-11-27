@@ -110,7 +110,7 @@ export default function MotoMap() {
   const buildRoute = async (from: LngLat, to: LngLat) => {
     try {
       const osrmHost = ["router", "project-osrm", "org"].join(".");
-      const routeUrl = `https://${osrmHost}/route/v1/driving/${from[0]},${from[1]};${to[0]},${to[1]}?overview=full&geometries=geojson`;
+      const routeUrl = `https://${osrmHost}/route/v1/driving/${from[0]},${from[1]};${to[0]},${to[1]}?overview=full&geometries=geojson&radiuses=10000;10000`;
       const routeRes = await fetch(routeUrl);
       const routeData = await routeRes.json();
       const firstRoute = routeData?.routes?.[0];
